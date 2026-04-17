@@ -1,0 +1,6 @@
+{
+  "name": "agent-device-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for controlling iOS simulators and Android emulators via Callstack's agent-device. Accessibility-tree-based — structured data instead of screenshots.",
+  "auto_discover": true
+}

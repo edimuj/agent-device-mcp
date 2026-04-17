@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "agent-device": {
+      "type": "stdio",
+      "command": "tsx",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/src/server.ts"],
+      "env": {
+        "AGENT_DEVICE_HOST": "admin@macmini"
+      }
+    }
+  }
+}

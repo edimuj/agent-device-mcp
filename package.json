@@ -1,0 +1,26 @@
+{
+  "name": "@exelerus/agent-device-mcp",
+  "version": "0.1.0",
+  "description": "MCP server wrapping Callstack's agent-device for accessibility-tree-based simulator/emulator control",
+  "type": "module",
+  "bin": {
+    "agent-device-mcp": "./dist/server.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true
+}
