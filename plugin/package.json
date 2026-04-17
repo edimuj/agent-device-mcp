@@ -1,0 +1,9 @@
+{
+  "name": "@exelerus/agent-device-mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.25.67"
+  }
+}

@@ -1,3 +1,5 @@
 node_modules/
-dist/
 *.tsbuildinfo
+
+# Root dist is ignored, but plugin/dist/ is committed (needed for git-sourced plugin)
+/dist/

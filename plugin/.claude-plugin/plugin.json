@@ -1,0 +1,5 @@
+{
+  "name": "agent-device-mcp",
+  "description": "MCP server for controlling iOS simulators and Android emulators via agent-device accessibility tree",
+  "version": "0.1.0"
+}

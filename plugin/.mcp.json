@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "agent-device": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/server.js"],
+      "env": {
+        "AGENT_DEVICE_HOST": "admin@macmini",
+        "NODE_PATH": "${CLAUDE_PLUGIN_DATA}/node_modules"
+      }
+    }
+  }
+}
