@@ -1,5 +1,5 @@
 {
-  "name": "@exelerus/agent-device-mcp",
+  "name": "agent-device-mcp",
   "version": "0.1.0",
   "description": "MCP server wrapping Callstack's agent-device for accessibility-tree-based simulator/emulator control",
   "type": "module",

@@ -9,11 +9,11 @@ export interface ExecutorConfig {
 export declare class AgentDeviceExecutor {
     private config;
     private lastCallTime;
+    private isLocal;
     constructor(config?: Partial<ExecutorConfig>);
     private enforceSpacing;
-    private buildRemoteCommand;
-    private ssh;
+    private exec;
+    private buildCommand;
     run(args: string[]): Promise<string>;
     runParsed<T = unknown>(args: string[]): Promise<T>;
-    runLocal(command: string, args: string[]): Promise<string>;
 }

@@ -3,11 +3,14 @@ const RETRYABLE_PATTERN = /timed out|timeout|xctest|daemon.*(busy|unavailable|fa
 export class AgentDeviceExecutor {
     config;
     lastCallTime = 0;
+    isLocal;
     constructor(config = {}) {
+        const host = config.host ?? process.env.AGENT_DEVICE_HOST ?? '';
+        this.isLocal = !host || host === 'localhost' || host === '127.0.0.1';
         this.config = {
-            host: config.host ?? process.env.AGENT_DEVICE_HOST ?? 'admin@macmini',
+            host,
             agentDeviceBin: config.agentDeviceBin ?? process.env.AGENT_DEVICE_BIN ?? 'agent-device',
-            pathPrefix: config.pathPrefix ?? process.env.AGENT_DEVICE_PATH_PREFIX ?? '/opt/homebrew/bin:$PATH',
+            pathPrefix: config.pathPrefix ?? process.env.AGENT_DEVICE_PATH_PREFIX ?? '',
             minSpacingMs: config.minSpacingMs ?? Number(process.env.AGENT_DEVICE_MIN_SPACING_MS ?? 1000),
             retryMax: config.retryMax ?? Number(process.env.AGENT_DEVICE_RETRY_MAX ?? 3),
             retryInitialDelayMs: config.retryInitialDelayMs ?? Number(process.env.AGENT_DEVICE_RETRY_INITIAL_DELAY_MS ?? 1000),
@@ -20,16 +23,14 @@ export class AgentDeviceExecutor {
             await new Promise(r => setTimeout(r, this.config.minSpacingMs - elapsed));
         }
     }
-    buildRemoteCommand(args) {
-        const cmd = [this.config.agentDeviceBin, ...args, '--json'];
-        const escaped = cmd.map(a => `'${a.replace(/'/g, "'\\''")}'`).join(' ');
-        return `export PATH='${this.config.pathPrefix}'; ${escaped} 2>&1`;
-    }
-    ssh(remoteCmd) {
+    exec(command, args) {
         return new Promise((resolve, reject) => {
-            execFile('ssh', ['-o', 'StrictHostKeyChecking=no', this.config.host, remoteCmd], {
+            execFile(command, args, {
                 timeout: 30_000,
                 maxBuffer: 10 * 1024 * 1024,
+                env: this.isLocal && this.config.pathPrefix
+                    ? { ...process.env, PATH: `${this.config.pathPrefix}:${process.env.PATH}` }
+                    : process.env,
             }, (err, stdout, stderr) => {
                 if (err) {
                     reject(Object.assign(err, { stdout, stderr }));
@@ -40,14 +41,30 @@ export class AgentDeviceExecutor {
             });
         });
     }
+    buildCommand(args) {
+        const fullArgs = [...args, '--json'];
+        if (this.isLocal) {
+            return { command: this.config.agentDeviceBin, args: fullArgs };
+        }
+        const cmd = [this.config.agentDeviceBin, ...fullArgs];
+        const escaped = cmd.map(a => `'${a.replace(/'/g, "'\\''")}'`).join(' ');
+        const pathExport = this.config.pathPrefix
+            ? `export PATH='${this.config.pathPrefix}'; `
+            : '';
+        const remoteCmd = `${pathExport}${escaped} 2>&1`;
+        return {
+            command: 'ssh',
+            args: ['-o', 'StrictHostKeyChecking=no', this.config.host, remoteCmd],
+        };
+    }
     async run(args) {
         let attempt = 1;
         let delay = this.config.retryInitialDelayMs;
         while (true) {
             await this.enforceSpacing();
-            const remoteCmd = this.buildRemoteCommand(args);
+            const { command, args: cmdArgs } = this.buildCommand(args);
             try {
-                const { stdout } = await this.ssh(remoteCmd);
+                const { stdout } = await this.exec(command, cmdArgs);
                 this.lastCallTime = Date.now();
                 return stdout;
             }
@@ -71,15 +88,5 @@ export class AgentDeviceExecutor {
         catch {
             return raw;
         }
-    }
-    async runLocal(command, args) {
-        return new Promise((resolve, reject) => {
-            execFile(command, args, { timeout: 30_000 }, (err, stdout, stderr) => {
-                if (err)
-                    reject(Object.assign(err, { stdout, stderr }));
-                else
-                    resolve(stdout);
-            });
-        });
     }
 }

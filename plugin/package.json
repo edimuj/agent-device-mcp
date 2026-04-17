@@ -1,5 +1,5 @@
 {
-  "name": "@exelerus/agent-device-mcp",
+  "name": "agent-device-mcp",
   "version": "0.1.0",
   "type": "module",
   "dependencies": {

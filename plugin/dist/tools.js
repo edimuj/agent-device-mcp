@@ -77,7 +77,7 @@ export function registerTools(server, executor) {
         }
     });
     server.tool('device_open', 'Open an app session on the device', {
-        bundleId: z.string().describe('App bundle ID (e.g. com.exelerus.chatgamesystem.app)'),
+        bundleId: z.string().describe('App bundle ID (e.g. com.example.myapp)'),
         relaunch: z.boolean().optional().describe('Force relaunch if already open'),
     }, async ({ bundleId, relaunch }) => {
         try {

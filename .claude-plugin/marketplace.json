@@ -3,7 +3,7 @@
   "metadata": {
     "description": "MCP server for controlling iOS simulators and Android emulators via Callstack's agent-device. Accessibility-tree-based interaction."
   },
-  "owner": { "name": "edimuj" },
+  "owner": { "name": "exelerus" },
   "plugins": [
     {
       "name": "agent-device-mcp",
