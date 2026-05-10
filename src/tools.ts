@@ -13,6 +13,52 @@ interface SnapshotResult {
   data?: { nodes?: SnapshotNode[] };
 }
 
+type SwipeDirection = 'up' | 'down' | 'left' | 'right';
+
+interface SwipeOptions {
+  width?: number;
+  height?: number;
+  durationMs?: number;
+}
+
+const DEFAULT_SWIPE_VIEWPORT = {
+  width: 390,
+  height: 844,
+};
+
+const DEFAULT_SWIPE_DURATION_MS = 450;
+
+function roundedPoint(value: number): string {
+  return String(Math.round(value));
+}
+
+export function buildSwipeArgs(direction: SwipeDirection, options: SwipeOptions = {}): string[] {
+  const width = options.width ?? DEFAULT_SWIPE_VIEWPORT.width;
+  const height = options.height ?? DEFAULT_SWIPE_VIEWPORT.height;
+  const centerX = width * 0.5;
+  const centerY = height * 0.5;
+  const leftX = width * 0.2;
+  const rightX = width * 0.8;
+  const topY = height * 0.2;
+  const bottomY = height * 0.8;
+  const durationMs = options.durationMs ?? DEFAULT_SWIPE_DURATION_MS;
+
+  const coords = (() => {
+    switch (direction) {
+      case 'up':
+        return [centerX, bottomY, centerX, topY];
+      case 'down':
+        return [centerX, topY, centerX, bottomY];
+      case 'left':
+        return [rightX, centerY, leftX, centerY];
+      case 'right':
+        return [leftX, centerY, rightX, centerY];
+    }
+  })();
+
+  return ['swipe', ...coords.map(roundedPoint), String(durationMs)];
+}
+
 const IGNORED_BUTTONS = new Set([
   'Go back', 'Settings', 'Tap to collapse choices',
   'Close browser', 'Refresh page',
@@ -278,13 +324,11 @@ export function registerTools(server: McpServer, executor: AgentDeviceExecutor) 
     'Swipe on screen in a direction',
     {
       direction: z.enum(['up', 'down', 'left', 'right']).describe('Swipe direction'),
-      ref: z.string().optional().describe('Element ref to swipe on (optional, defaults to screen center)'),
+      ref: z.string().optional().describe('Deprecated; swipes use center-screen coordinates'),
     },
-    async ({ direction, ref }) => {
+    async ({ direction }) => {
       try {
-        const args = ['swipe', direction];
-        if (ref) args.push('--element', ref);
-        const result = await executor.runParsed(args);
+        const result = await executor.runParsed(buildSwipeArgs(direction));
         return ok(result);
       } catch (e: any) {
         return err(e.message);
