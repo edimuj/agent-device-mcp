@@ -5,7 +5,7 @@ import { AgentDeviceExecutor } from './executor.js';
 import { registerTools } from './tools.js';
 const server = new McpServer({
     name: 'agent-device-mcp',
-    version: '0.1.0',
+    version: '0.2.0',
 });
 const executor = new AgentDeviceExecutor();
 registerTools(server, executor);
