@@ -47,7 +47,7 @@ describe('AgentDeviceExecutor preflight', () => {
   });
 
   it('rejects an unsupported agent-device version before running a command', async () => {
-    const mock = mockExec(() => ({ stdout: '0.20.0\n' }));
+    const mock = mockExec(() => ({ stdout: '0.19.9\n' }));
     const executor = new AgentDeviceExecutor(
       { minSpacingMs: 0 },
       { execFile: mock.execFile },

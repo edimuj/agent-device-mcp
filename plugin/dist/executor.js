@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process';
 import { homedir } from 'node:os';
-export const SUPPORTED_AGENT_DEVICE_VERSION = '0.12.6';
+export const SUPPORTED_AGENT_DEVICE_VERSION = '0.20.0';
 const RETRYABLE_PATTERN = /timed out|timeout|xctest|daemon.*(busy|unavailable|failed)|COMMAND_FAILED/i;
 function shellQuote(value) {
     return `'${value.replace(/'/g, "'\\''")}'`;
