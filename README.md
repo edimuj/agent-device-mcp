@@ -13,14 +13,14 @@ Ships as a **Claude Code plugin** or runs as a standalone stdio MCP server.
 
 ## Supported agent-device version
 
-This adapter targets and checks for **agent-device 0.12.6**. Install that exact version on every local or SSH device host:
+This adapter targets and checks for **agent-device 0.20.0**. Install that exact version on every local or SSH device host:
 
 ```bash
-npm install -g agent-device@0.12.6
+npm install -g agent-device@0.20.0
 agent-device --version
 ```
 
-The first adapter command performs a cached version preflight and returns a clear error if a different upstream version is found. `agent-device` 0.12.6 requires Node.js 22 or newer even though the adapter itself can run on Node.js 18 or newer.
+The first adapter command performs a cached version preflight and returns a clear error if a different upstream version is found. We bump this pin when upstream publishes a new release; update the exact install command and rerun the fixture-based unit suite as part of that change. `agent-device` 0.20.0 requires Node.js 22.12 or newer even though the adapter itself can run on Node.js 18 or newer.
 
 ## Tools
 

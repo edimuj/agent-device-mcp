@@ -1,4 +1,4 @@
-export declare const SUPPORTED_AGENT_DEVICE_VERSION = "0.12.6";
+export declare const SUPPORTED_AGENT_DEVICE_VERSION = "0.20.0";
 export interface ExecutorConfig {
     host: string;
     agentDeviceBin: string;
